@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog - Harmony Apartments</title>
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="public/favicon.ico" sizes="16x16">
+    <link rel="icon" type="image/x-icon" href="public/favicon1.ico" sizes="32x32">
+    <link rel="icon" type="image/x-icon" href="public/favicon2.ico" sizes="48x48">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Scroll Navigation Bar -->
+    <nav class="scroll-nav" id="scrollNav">
+        <div class="container scroll-nav-container">
+            <a href="https://hobokenvacationrentals.com/" target="_blank" class="scroll-nav-logo-link">
+                <img src="public/logo.png" alt="Harmony Apartments" class="scroll-nav-logo">
+            </a>
+            <a href="https://reserve.hobokenvacationrentals.com/" class="scroll-nav-button" target="_blank">Book Now</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <!-- Carousel Background -->
+        <div class="carousel-container">
+            <div class="carousel-track">
+                <div class="carousel-slide">
+                    <img src="public/banner1.jpeg" alt="Banner 1">
+                </div>
+                <div class="carousel-slide">
+                    <img src="public/banner2.jpeg" alt="Banner 2">
+                </div>
+                <div class="carousel-slide">
+                    <img src="public/banner3.jpeg" alt="Banner 3">
+                </div>
+                <!-- Duplicate for seamless loop -->
+                <div class="carousel-slide">
+                    <img src="public/banner1.jpeg" alt="Banner 1">
+                </div>
+                <div class="carousel-slide">
+                    <img src="public/banner2.jpeg" alt="Banner 2">
+                </div>
+                <div class="carousel-slide">
+                    <img src="public/banner3.jpeg" alt="Banner 3">
+                </div>
+            </div>
+        </div>
+
+        <!-- Overlay for darkening -->
+        <div class="hero-overlay"></div>
+
+        <!-- Content -->
+        <div class="hero-content">
+            <div class="container">
+                <img src="public/trans_logo.png" alt="Harmony Apartments" class="hero-logo">
+                <h2>Harmony Apartments Blog</h2>
+                <a href="https://reserve.hobokenvacationrentals.com/" class="hero-button" target="_blank">Book Now</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Posts Section -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Search Bar -->
+            <div class="filter-section">
+                <input type="text" id="searchInput" placeholder="Search blog posts..." class="search-input">
+            </div>
+
+            <!-- Blog Posts Container (Dynamically loaded) -->
+            <div id="blogPostsContainer" class="blog-posts-grid">
+                <!-- Blog posts will be dynamically inserted here -->
+            </div>
+
+            <!-- Pagination -->
+            <div id="pagination" class="pagination">
+                <!-- Pagination buttons will be dynamically inserted here -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <a href="https://hobokenvacationrentals.com/" target="_blank" class="footer-logo-link">
+                    <img src="public/logo.png" alt="Harmony Apartments" class="footer-logo">
+                </a>
+                <div class="footer-info">
+                    <p class="footer-address">57 Newark Street, Hoboken, NJ 07030</p>
+                    <p class="footer-phone">Phone: <a href="tel:+12014877882">+1 (201) 487-7882</a></p>
+                    <p class="footer-email">Email: <a href="mailto:reservations@hobokenvacationrentals.com">reservations@hobokenvacationrentals.com</a></p>
+                </div>
+            </div>
+            <hr class="footer-divider">
+            <p class="footer-copyright">&copy; 2025 . All rights reserved</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="blog-posts.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
