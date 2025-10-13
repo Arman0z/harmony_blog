@@ -1,0 +1,20 @@
+{
+  "_README": "This is a template for creating new blog posts. Copy the structure below (excluding this _README field) and add it to the 'posts' array in blog-posts.json",
+  "_INSTRUCTIONS": "1. Copy the template below. 2. Fill in all REQUIRED fields. 3. Optionally fill in optional fields. 4. Add to blog-posts.json. 5. Run 'node validate.js' to check for errors before deployment.",
+
+  "id": "REQUIRED - Integer - Must be unique. Use next available number (current highest ID + 1)",
+
+  "title": "REQUIRED - String - The blog post title. Keep under 100 characters for best display. Example: 'Top 10 Things to Do in Hoboken This Spring'",
+
+  "excerpt": "REQUIRED - String - A brief summary of the post (2-3 sentences). Shows on listing page. Keep under 200 characters. Example: 'Discover the best spring activities in Hoboken, from waterfront walks to local dining. Perfect for your NYC getaway.'",
+
+  "content": "REQUIRED - String (HTML) - The main content of the blog post. Write in HTML format. Use <h2> for major sections, <h3> for subsections, <p> for paragraphs. Example structure:\n\n<h3>Introduction Title</h3>\n<p>Introduction paragraph text here...</p>\n\n<h2>Main Section Title</h2>\n\n<h3>Subsection 1</h3>\n<p>Content for subsection 1...</p>\n\n<h3>Subsection 2</h3>\n<p>Content for subsection 2...</p>\n\n<h2>Conclusion</h2>\n<p>Concluding paragraph...</p>\n\nTips:\n- Use <strong>text</strong> for bold\n- Use <em>text</em> for italics\n- Use <a href='URL'>link text</a> for links\n- Keep paragraphs concise (3-5 sentences)\n- Break content into scannable sections with headings",
+
+  "author": "OPTIONAL - String - Default: 'Harmony Apartments' - Change if you have multiple authors. Example: 'John Smith' or 'Guest Writer'",
+
+  "date": "REQUIRED - String (YYYY-MM-DD format) - Publication date. Must follow format exactly. Example: '2025-10-15' for October 15, 2025. Use today's date or schedule for future.",
+
+  "category": "REQUIRED - String - Blog post category. Keep consistent. Current categories: 'Travel & Local', 'Events', 'Guides', 'Seasonal'. Choose existing or create new category. Example: 'Travel & Local'",
+
+  "image": "OPTIONAL - String - Path to blog post featured image. Format: 'public/filename.jpg' - Upload image to /public folder first, then reference here. Use descriptive filenames. Example: 'public/spring-hoboken-2025.jpg'. Recommended image size: 1200x600px minimum, JPG format, optimized under 500KB."
+}

@@ -2,10 +2,26 @@
 // Handles loading and displaying a single blog post
 
 // Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    loadPost();
-    loadRelatedArticles();
-    initializeScrollNav();
+document.addEventListener('DOMContentLoaded', async function() {
+    try {
+        // Show loading state
+        const postContent = document.getElementById('postContent');
+        if (postContent) {
+            postContent.innerHTML = '<div class="loading">Loading post...</div>';
+        }
+
+        // Load data from JSON files
+        await loadAllData();
+
+        // Load post and related content
+        loadPost();
+        loadRelatedArticles();
+        loadSidebarPromotion();
+        initializeScrollNav();
+    } catch (error) {
+        // Error already handled by data-loader.js
+        console.error('Failed to load post:', error);
+    }
 });
 
 function loadPost() {
@@ -56,16 +72,7 @@ function loadPost() {
         <div class="post-content">
             ${post.content}
         </div>
-        <div class="post-end-promotion">
-            <h3 class="post-end-promotion-title">Returning Guest Exclusive:</h3>
-            <div class="post-end-promotion-discount">GET 15% OFF YOUR STAY</div>
-            <div class="post-end-promotion-code">Code: <strong>WELCOMEBACK</strong></div>
-            <div class="post-end-promotion-validity">
-                <p>Promotion applies to arrivals before 12/15/25. Available for a limited time.<br>Excludes: Thanksgiving (11/27/25), Christmas (12/25/25), and New Year's Eve (12/31/25).</p>
-            </div>
-            <a href="https://reserve.hobokenvacationrentals.com/" class="post-end-promotion-button" target="_blank">Book with WELCOMEBACK</a>
-            <p class="post-end-promotion-terms">Returning guests only. Cannot combine with other offers. Subject to availability. Taxes and fees apply.</p>
-        </div>
+        ${generateEndOfPostPromotion()}
         <div class="post-bottom-navigation">
             <a href="index.html" class="back-button">← Back to Blog</a>
         </div>
@@ -135,4 +142,16 @@ function createRelatedArticleCard(post) {
     `;
 
     return card;
+}
+
+function loadSidebarPromotion() {
+    const promotionContainer = document.getElementById('promotionContainer');
+
+    if (!promotionContainer) {
+        return;
+    }
+
+    // Generate and insert promotion HTML
+    const promotionHTML = generateSidebarPromotion();
+    promotionContainer.innerHTML = promotionHTML;
 }

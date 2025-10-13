@@ -4,12 +4,28 @@
 // Configuration
 const POSTS_PER_PAGE = 6;
 let currentPage = 1;
-let filteredPosts = [...blogPosts];
+let filteredPosts = [];
 
 // Initialize the application when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    initializeApp();
-    initializeScrollNav();
+document.addEventListener('DOMContentLoaded', async function() {
+    try {
+        // Show loading state
+        const container = document.getElementById('blogPostsContainer');
+        if (container) {
+            container.innerHTML = '<div class="loading">Loading blog posts...</div>';
+        }
+
+        // Load data from JSON files
+        await loadAllData();
+
+        // Initialize with loaded data
+        filteredPosts = [...blogPosts];
+        initializeApp();
+        initializeScrollNav();
+    } catch (error) {
+        // Error already handled by data-loader.js
+        console.error('Failed to initialize blog:', error);
+    }
 });
 
 function initializeApp() {
@@ -101,8 +117,8 @@ function createPostCard(post) {
     // Create image element or placeholder with promotion banner for specific posts
     let imageHTML;
     if (post.image) {
-        // Check if this post should have a promotion banner (NYC post has id: 1)
-        if (post.id === 1) {
+        // Check if this post should have a promotion banner (configured in promotions.json)
+        if (shouldShowPromotion(post.id)) {
             imageHTML = `
                 <div class="blog-card-image-container">
                     <img src="${post.image}" alt="${post.title}" class="blog-card-image">
@@ -119,10 +135,10 @@ function createPostCard(post) {
     card.innerHTML = `
         ${imageHTML}
         <div class="blog-card-content">
+            <h3 class="blog-card-title">${post.title}</h3>
             <div class="blog-card-meta">
                 <span class="blog-card-date">${formattedDate}</span>
             </div>
-            <h3 class="blog-card-title">${post.title}</h3>
             <p class="blog-card-excerpt">${post.excerpt}</p>
         </div>
         <button class="blog-card-button">Read Full Article</button>
