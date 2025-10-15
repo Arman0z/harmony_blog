@@ -3,8 +3,9 @@
 /**
  * Content Validation Script for Harmony Apartments Blog
  *
- * This script validates blog-posts.json and promotions.json to catch errors
- * before deployment. Run this before pushing changes to production.
+ * This script validates blog-posts.json to catch errors before deployment.
+ * Also validates promotions.json for backwards compatibility (now deprecated).
+ * Run this before pushing changes to production.
  *
  * Usage: node validate.js
  */
@@ -162,6 +163,16 @@ function validateBlogPosts() {
         if (post.author && post.author.trim().length === 0) {
             warn(`${postLabel}: Field "author" is empty, consider removing or filling it`);
         }
+
+        // Validate promotionId (optional field in multi-promotion system)
+        if (post.promotionId) {
+            if (typeof post.promotionId !== 'string') {
+                error(`${postLabel}: Field "promotionId" must be a string`);
+            } else if (post.promotionId.trim().length === 0) {
+                warn(`${postLabel}: Field "promotionId" is empty, consider removing it`);
+            }
+            // Note: Cross-check with promotions.json is done in validatePromotions()
+        }
     });
 
     success(`Validated ${data.posts.length} blog post(s)`);
@@ -169,6 +180,7 @@ function validateBlogPosts() {
 
 /**
  * Validates promotions configuration
+ * Multi-Promotion System: Validates all promotions in the promotions object
  */
 function validatePromotions() {
     info('Validating promotions.json...');
@@ -190,91 +202,131 @@ function validatePromotions() {
         return;
     }
 
-    // Check if currentPromotion exists
-    if (!data.currentPromotion) {
-        error('promotions.json must contain a "currentPromotion" object');
+    // Check if promotions object exists
+    if (!data.promotions) {
+        error('promotions.json must contain a "promotions" object');
         return;
     }
 
-    const promo = data.currentPromotion;
+    if (typeof data.promotions !== 'object' || Array.isArray(data.promotions)) {
+        error('promotions.json "promotions" must be an object (not an array)');
+        return;
+    }
 
-    // Required fields
+    const promotionIds = Object.keys(data.promotions);
+
+    if (promotionIds.length === 0) {
+        warn('No promotions found in promotions.json');
+        return;
+    }
+
+    // Required fields for each promotion
     const requiredFields = ['enabled', 'code', 'discount', 'title', 'returnGuestTitle',
                            'validUntil', 'validUntilFormatted', 'blackoutDates',
-                           'applicablePosts', 'bookingUrl', 'restrictions'];
+                           'bookingUrl', 'restrictions', 'showBannerOnListing'];
 
-    requiredFields.forEach(field => {
-        if (!(field in promo)) {
-            error(`Promotion: Missing required field "${field}"`);
+    // Validate each promotion
+    promotionIds.forEach(promoId => {
+        const promo = data.promotions[promoId];
+        const promoLabel = `Promotion "${promoId}"`;
+
+        // Check if promotion is an object
+        if (typeof promo !== 'object' || Array.isArray(promo)) {
+            error(`${promoLabel}: Must be an object`);
+            return;
+        }
+
+        // Validate required fields
+        requiredFields.forEach(field => {
+            if (!(field in promo)) {
+                error(`${promoLabel}: Missing required field "${field}"`);
+            }
+        });
+
+        // Validate enabled
+        if (typeof promo.enabled !== 'boolean') {
+            error(`${promoLabel}: Field "enabled" must be true or false`);
+        }
+
+        // Validate code
+        if (promo.code && promo.code !== promoId) {
+            warn(`${promoLabel}: Promotion code "${promo.code}" doesn't match key "${promoId}". Consider using the same value.`);
+        }
+
+        // Validate showBannerOnListing
+        if (typeof promo.showBannerOnListing !== 'boolean') {
+            error(`${promoLabel}: Field "showBannerOnListing" must be true or false`);
+        }
+
+        // Validate dates
+        if (promo.validUntil) {
+            const datePattern = /^\d{4}-\d{2}-\d{2}$/;
+            if (!datePattern.test(promo.validUntil)) {
+                error(`${promoLabel}: Invalid validUntil format "${promo.validUntil}". Must be YYYY-MM-DD`);
+            } else {
+                const validDate = new Date(promo.validUntil);
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+
+                if (validDate < today && promo.enabled) {
+                    warn(`${promoLabel}: validUntil date has passed, but promotion is still enabled`);
+                }
+            }
+        }
+
+        // Validate blackout dates
+        if (promo.blackoutDates) {
+            if (!Array.isArray(promo.blackoutDates)) {
+                error(`${promoLabel}: Field "blackoutDates" must be an array`);
+            } else {
+                promo.blackoutDates.forEach((blackout, index) => {
+                    if (!blackout.date || !blackout.name || !blackout.formatted) {
+                        error(`${promoLabel}: Blackout date #${index + 1} is missing required fields (date, name, formatted)`);
+                    }
+                });
+            }
+        }
+
+        // Validate URL
+        if (promo.bookingUrl) {
+            try {
+                new URL(promo.bookingUrl);
+            } catch (err) {
+                error(`${promoLabel}: Invalid bookingUrl "${promo.bookingUrl}"`);
+            }
         }
     });
 
-    // Validate enabled
-    if (typeof promo.enabled !== 'boolean') {
-        error('Promotion: Field "enabled" must be true or false');
-    }
+    // Cross-reference with blog posts to check for orphaned promotionIds
+    try {
+        const postsContent = fs.readFileSync(path.join(__dirname, 'blog-posts.json'), 'utf8');
+        const postsData = JSON.parse(postsContent);
+        const referencedPromotions = new Set();
 
-    // Validate dates
-    if (promo.validUntil) {
-        const datePattern = /^\d{4}-\d{2}-\d{2}$/;
-        if (!datePattern.test(promo.validUntil)) {
-            error(`Promotion: Invalid validUntil format "${promo.validUntil}". Must be YYYY-MM-DD`);
-        } else {
-            const validDate = new Date(promo.validUntil);
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
+        postsData.posts.forEach(post => {
+            if (post.promotionId) {
+                referencedPromotions.add(post.promotionId);
 
-            if (validDate < today && promo.enabled) {
-                warn('Promotion: validUntil date has passed, but promotion is still enabled');
-            }
-        }
-    }
-
-    // Validate blackout dates
-    if (promo.blackoutDates) {
-        if (!Array.isArray(promo.blackoutDates)) {
-            error('Promotion: Field "blackoutDates" must be an array');
-        } else {
-            promo.blackoutDates.forEach((blackout, index) => {
-                if (!blackout.date || !blackout.name || !blackout.formatted) {
-                    error(`Promotion: Blackout date #${index + 1} is missing required fields (date, name, formatted)`);
+                // Check if referenced promotion exists
+                if (!data.promotions[post.promotionId]) {
+                    error(`Post #${post.id} references non-existent promotion "${post.promotionId}"`);
+                } else if (!data.promotions[post.promotionId].enabled) {
+                    warn(`Post #${post.id} references disabled promotion "${post.promotionId}"`);
                 }
-            });
-        }
-    }
-
-    // Validate applicablePosts
-    if (promo.applicablePosts) {
-        if (!Array.isArray(promo.applicablePosts)) {
-            error('Promotion: Field "applicablePosts" must be an array');
-        } else {
-            // Check if referenced post IDs exist
-            try {
-                const postsContent = fs.readFileSync(path.join(__dirname, 'blog-posts.json'), 'utf8');
-                const postsData = JSON.parse(postsContent);
-                const validPostIds = new Set(postsData.posts.map(p => p.id));
-
-                promo.applicablePosts.forEach(postId => {
-                    if (!validPostIds.has(postId)) {
-                        warn(`Promotion: References non-existent post ID ${postId}`);
-                    }
-                });
-            } catch (err) {
-                // Already reported in blog posts validation
             }
-        }
+        });
+
+        // Check for unused promotions
+        promotionIds.forEach(promoId => {
+            if (!referencedPromotions.has(promoId) && data.promotions[promoId].enabled) {
+                info(`Promotion "${promoId}" is enabled but not referenced by any blog post`);
+            }
+        });
+    } catch (err) {
+        // Already reported in blog posts validation
     }
 
-    // Validate URL
-    if (promo.bookingUrl) {
-        try {
-            new URL(promo.bookingUrl);
-        } catch (err) {
-            error(`Promotion: Invalid bookingUrl "${promo.bookingUrl}"`);
-        }
-    }
-
-    success('Promotions configuration validated');
+    success(`Validated ${promotionIds.length} promotion(s)`);
 }
 
 /**

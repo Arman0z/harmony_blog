@@ -114,11 +114,12 @@ function createPostCard(post) {
     // Format date
     const formattedDate = formatDate(post.date);
 
-    // Create image element or placeholder with promotion banner for specific posts
+    // Create image element or placeholder with promotion banner if applicable
+    // Multi-Promotion System: Check if post has an enabled promotion with banner
     let imageHTML;
     if (post.image) {
-        // Check if this post should have a promotion banner (configured in promotions.json)
-        if (shouldShowPromotion(post.id)) {
+        // Check if this post should have a promotion banner
+        if (shouldShowPromotion(post)) {
             imageHTML = `
                 <div class="blog-card-image-container">
                     <img src="${post.image}" alt="${post.title}" class="blog-card-image">

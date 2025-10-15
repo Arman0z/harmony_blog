@@ -1,5 +1,9 @@
 // Individual Blog Post Page JavaScript
 // Handles loading and displaying a single blog post
+// Multi-Promotion System: Uses post's promotionId to display the correct promotion
+
+// Store current post for promotion rendering
+let currentPost = null;
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', async function() {
@@ -47,6 +51,9 @@ function loadPost() {
         return;
     }
 
+    // Store current post globally for promotion rendering
+    currentPost = post;
+
     // Update page title
     document.getElementById('pageTitle').textContent = `${post.title} - Harmony Apartments`;
 
@@ -63,6 +70,9 @@ function loadPost() {
         postHeroImage.style.display = 'none';
     }
 
+    // Generate end-of-post promotion using post's promotionId
+    const endPromotion = post.promotionId ? generateEndOfPostPromotion(post.promotionId) : '';
+
     // Render post content (without image, as it's now in the hero section)
     postContent.innerHTML = `
         <h1 class="post-title">${post.title}</h1>
@@ -72,7 +82,7 @@ function loadPost() {
         <div class="post-content">
             ${post.content}
         </div>
-        ${generateEndOfPostPromotion()}
+        ${endPromotion}
         <div class="post-bottom-navigation">
             <a href="index.html" class="back-button">← Back to Blog</a>
         </div>
@@ -151,7 +161,9 @@ function loadSidebarPromotion() {
         return;
     }
 
-    // Generate and insert promotion HTML
-    const promotionHTML = generateSidebarPromotion();
+    // Generate and insert promotion HTML using current post's promotionId
+    const promotionHTML = currentPost && currentPost.promotionId
+        ? generateSidebarPromotion(currentPost.promotionId)
+        : '';
     promotionContainer.innerHTML = promotionHTML;
 }

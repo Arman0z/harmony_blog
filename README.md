@@ -2,6 +2,8 @@
 
 A clean, maintainable blog website for Harmony Apartments short-term rentals in Hoboken, NJ. Built with vanilla HTML, CSS, and JavaScript for simplicity and ease of content management.
 
+`python3 -m http.server 8000`
+
 ---
 
 ## Table of Contents
@@ -44,7 +46,7 @@ This is a blog website designed to showcase content about Harmony Apartments and
 ### Key Features
 
 ✅ **Content Separated from Code** - Non-developers can edit JSON files safely
-✅ **Centralized Promotions** - Update once, applies everywhere
+✅ **Flexible Promotions** - Each post can have unique, customized promotions
 ✅ **Pre-Deployment Validation** - Catch errors before they go live
 ✅ **Clear Templates** - Easy to copy and create new posts
 ✅ **Search & Pagination** - User-friendly blog browsing
@@ -101,7 +103,7 @@ harmony_blog/
 ├── style.css               # All styling (1200+ lines)
 │
 ├── blog-posts.json         # 📝 BLOG CONTENT (edit this to add posts)
-├── promotions.json         # 🎉 PROMOTION CONFIG (edit this to change promotions)
+├── promotions.json         # 🎟️ PROMOTIONS (multi-promotion configuration)
 ├── post-template.json      # Template for new posts (reference only)
 │
 ├── data-loader.js          # Utility to load JSON data
@@ -124,8 +126,7 @@ harmony_blog/
 
 ### Files You'll Edit Regularly
 
-- **blog-posts.json** - Add, update, or remove blog posts
-- **promotions.json** - Update promotion details and dates
+- **blog-posts.json** - Add, update, or remove blog posts (including promotions)
 - **public/** - Add new images for blog posts
 
 ### Files You'll Rarely Edit
@@ -386,111 +387,282 @@ Once validated and tested, deploy your changes (see [Deployment](#deployment) se
 
 ## Promotion Management
 
-### How Promotions Work
+### How the Multi-Promotion System Works
 
-Promotions are configured in `promotions.json` and appear in **three places**:
-1. **"PROMOTION" banner** on blog post cards (on listing page)
-2. **Sidebar promotion box** on individual post pages
-3. **End-of-post promotion box** at the bottom of posts
+The blog uses a **multi-promotion system** that allows you to:
+- ✅ Create unlimited promotions in `promotions.json`
+- ✅ Assign different promotions to different blog posts
+- ✅ Display promotions in 3 locations: listing page banner, sidebar, and end-of-post
+- ✅ Enable/disable promotions individually
+- ✅ Manage all promotions from one central file
 
-All three update automatically when you edit `promotions.json`.
+**Architecture:**
+1. **promotions.json** - Contains all available promotions
+2. **blog-posts.json** - Each post references a promotion via `promotionId`
+3. **data-loader.js** - Dynamically generates promotion HTML based on references
+4. **Validation** - Ensures promotionIds reference existing, valid promotions
 
-### Updating a Promotion
+### Promotion Display Locations
 
-Open `promotions.json`:
+Each promotion can appear in three places:
+
+1. **Listing Page Banner** - "PROMOTION" badge on blog card (controlled by `showBannerOnListing`)
+2. **Sidebar Box** - Promotion details in right sidebar on post page
+3. **End of Post** - Promotion box at the end of article content
+
+### Creating a New Promotion
+
+#### Step 1: Add Promotion to promotions.json
+
+Open `promotions.json` and add your promotion to the `promotions` object:
 
 ```json
 {
-  "currentPromotion": {
-    "enabled": true,
-    "code": "WELCOMEBACK",
-    "discount": "15% OFF",
-    "title": "Limited Time Offer:",
-    "returnGuestTitle": "Returning Guest Exclusive:",
-    "validUntil": "2025-12-15",
-    "validUntilFormatted": "12/15/25",
-    "blackoutDates": [
-      {
-        "date": "2025-11-27",
-        "name": "Thanksgiving",
-        "formatted": "11/27/25"
-      }
-    ],
-    "applicablePosts": [1],
-    "showBannerOnListing": true,
-    "bookingUrl": "https://reserve.hobokenvacationrentals.com/",
-    "restrictions": "Returning guests only. Cannot combine with other offers."
+  "_comment": "Multi-Promotion System...",
+  "promotions": {
+    "WELCOMEBACK": {
+      "enabled": true,
+      "code": "WELCOMEBACK",
+      "discount": "15% OFF",
+      "title": "Limited Time Offer:",
+      "returnGuestTitle": "Returning Guest Exclusive:",
+      "validUntil": "2025-12-15",
+      "validUntilFormatted": "December 15, 2025",
+      "blackoutDates": [
+        {
+          "date": "2025-11-27",
+          "name": "Thanksgiving",
+          "formatted": "November 27"
+        }
+      ],
+      "bookingUrl": "https://reserve.hobokenvacationrentals.com/",
+      "restrictions": "Cannot be combined with other offers. Subject to availability.",
+      "showBannerOnListing": true
+    },
+    "YOURNEWPROMO": {
+      "enabled": true,
+      "code": "YOURNEWPROMO",
+      "discount": "20% OFF",
+      "title": "Special Offer:",
+      "returnGuestTitle": "Exclusive Deal:",
+      "validUntil": "2026-03-31",
+      "validUntilFormatted": "March 31, 2026",
+      "blackoutDates": [],
+      "bookingUrl": "https://reserve.hobokenvacationrentals.com/",
+      "restrictions": "Terms and conditions apply.",
+      "showBannerOnListing": false
+    }
   }
 }
 ```
 
-### Field Explanations
+#### Step 2: Assign Promotion to Blog Post
 
-- **enabled**: `true` to show promotion, `false` to hide it entirely
-- **code**: Promo code (e.g., "SUMMER25")
-- **discount**: Discount text (e.g., "20% OFF", "$50 OFF")
-- **title**: Heading for listing page promotion
-- **returnGuestTitle**: Heading for post page promotions
-- **validUntil**: Expiration date (YYYY-MM-DD format)
-- **validUntilFormatted**: Human-readable date (MM/DD/YY format)
-- **blackoutDates**: Array of dates excluded from promotion
-  - **date**: ISO format (YYYY-MM-DD)
-  - **name**: Holiday name
-  - **formatted**: Display format (MM/DD/YY)
-- **applicablePosts**: Array of post IDs that show "PROMOTION" banner
-- **showBannerOnListing**: Whether to show banner on cards
-- **bookingUrl**: Where "Book Now" button links
-- **restrictions**: Fine print text
+In `blog-posts.json`, add the `promotionId` field to your post:
 
-### Common Promotion Updates
-
-**Change the promo code:**
 ```json
-"code": "SPRING2025",
+{
+  "posts": [
+    {
+      "id": 1,
+      "title": "Your Blog Post",
+      "excerpt": "...",
+      "content": "...",
+      "date": "2025-10-15",
+      "category": "Travel & Local",
+      "image": "public/image.jpg",
+      "promotionId": "YOURNEWPROMO"
+    }
+  ]
+}
 ```
 
-**Update the discount:**
-```json
-"discount": "20% OFF",
+#### Step 3: Validate and Deploy
+
+```bash
+node validate.js
 ```
 
-**Extend the deadline:**
-```json
-"validUntil": "2025-12-31",
-"validUntilFormatted": "12/31/25",
-```
+The validation script will:
+- ✅ Check that `YOURNEWPROMO` exists in promotions.json
+- ✅ Verify all required promotion fields are present
+- ✅ Warn if promotion is disabled
+- ✅ Validate dates and URLs
 
-**Add a blackout date:**
+### Promotion Field Reference
+
+**Required Fields:**
+
+| Field | Type | Description | Example |
+|-------|------|-------------|---------|
+| `enabled` | boolean | Whether promotion is active | `true` |
+| `code` | string | Promotion code (should match key) | `"FALL15"` |
+| `discount` | string | Discount amount/description | `"15% OFF"` |
+| `title` | string | Title shown in sidebar | `"Limited Time Offer:"` |
+| `returnGuestTitle` | string | Title shown at end of post | `"Returning Guest Exclusive:"` |
+| `validUntil` | string | Expiration date (YYYY-MM-DD) | `"2025-12-31"` |
+| `validUntilFormatted` | string | Human-readable expiration | `"December 31, 2025"` |
+| `blackoutDates` | array | Dates when promotion doesn't apply | See example below |
+| `bookingUrl` | string | Full URL to booking page | `"https://..."` |
+| `restrictions` | string | Terms and conditions text | `"Cannot be combined..."` |
+| `showBannerOnListing` | boolean | Show "PROMOTION" badge on blog listing | `true` |
+
+**Blackout Dates Format:**
+
 ```json
 "blackoutDates": [
   {
     "date": "2025-12-25",
     "name": "Christmas",
-    "formatted": "12/25/25"
+    "formatted": "December 25"
   },
   {
     "date": "2025-12-31",
     "name": "New Year's Eve",
-    "formatted": "12/31/25"
+    "formatted": "December 31"
   }
-],
+]
 ```
 
-**Show promotion on multiple posts:**
+### Assigning Promotions to Posts
+
+**Option 1: Assign a promotion**
 ```json
-"applicablePosts": [1, 2, 3],
+{
+  "id": 1,
+  "title": "Blog Post Title",
+  "promotionId": "FALL15"
+}
 ```
 
-**Disable promotion temporarily:**
+**Option 2: No promotion**
 ```json
-"enabled": false,
+{
+  "id": 2,
+  "title": "Blog Post Title"
+}
+```
+Simply omit the `promotionId` field and no promotion will display.
+
+### Updating an Existing Promotion
+
+**To change promotion details across all posts using it:**
+
+1. Open `promotions.json`
+2. Find the promotion by its key (e.g., `"FALL15"`)
+3. Update the fields you want to change
+4. Save the file
+5. Run `node validate.js`
+6. Deploy
+
+**All posts with `"promotionId": "FALL15"` will automatically show the updated promotion.**
+
+### Disabling a Promotion
+
+**To temporarily disable without deleting:**
+
+```json
+"FALL15": {
+  "enabled": false,
+  ...
+}
 ```
 
-**After editing:**
-1. Save the file
-2. Run `node validate.js`
-3. Test locally
-4. Deploy
+Posts referencing this promotion won't show any promotion content. The validation script will warn you about posts referencing disabled promotions.
+
+### Deleting a Promotion
+
+1. Remove the promotion from `promotions.json`
+2. Find all posts with that `promotionId` in `blog-posts.json`
+3. Either:
+   - Remove the `promotionId` field (no promotion)
+   - Change to a different `promotionId` (different promotion)
+4. Run `node validate.js` - it will error if posts reference non-existent promotions
+5. Deploy
+
+### Common Promotion Workflows
+
+**Scenario 1: Seasonal Promotion**
+```json
+// Create summer promotion
+"SUMMER25": {
+  "enabled": true,
+  "code": "SUMMER25",
+  "validUntil": "2025-08-31",
+  ...
+}
+
+// Assign to summer-related posts
+{
+  "id": 5,
+  "title": "Best Summer Activities in NYC",
+  "promotionId": "SUMMER25"
+}
+```
+
+**Scenario 2: Different Promotions for New vs. Returning Guests**
+```json
+// In promotions.json:
+"WELCOME15": { ... },
+"WELCOMEBACK": { ... }
+
+// In blog-posts.json:
+{
+  "id": 1,
+  "title": "First Time Visiting NYC?",
+  "promotionId": "WELCOME15"
+},
+{
+  "id": 2,
+  "title": "5 Reasons to Return to NYC",
+  "promotionId": "WELCOMEBACK"
+}
+```
+
+**Scenario 3: Flash Sale**
+```json
+// Quickly enable a flash sale
+"FLASH48": {
+  "enabled": true,
+  "code": "FLASH48",
+  "discount": "25% OFF",
+  "validUntil": "2025-10-20",
+  ...
+}
+
+// Assign to all current posts
+// Later, just set "enabled": false to end sale
+```
+
+### Best Practices
+
+1. **Promotion Keys**: Use uppercase, descriptive names (e.g., `FALL15`, `WELCOMEBACK`)
+2. **Consistency**: Keep `code` field matching the promotion key
+3. **Expiration**: Always set realistic `validUntil` dates
+4. **Testing**: Run validation after any promotion changes
+5. **Documentation**: Use the `_comment` field in promotions.json for notes
+6. **Cleanup**: Periodically remove expired promotions
+7. **Banner Control**: Use `showBannerOnListing: true` sparingly to highlight special offers
+
+### Troubleshooting Promotions
+
+**Promotion not showing on post:**
+- Check `enabled: true` in promotions.json
+- Verify `promotionId` in blog post matches promotion key exactly (case-sensitive)
+- Run `node validate.js` to check for errors
+
+**Validation error "references non-existent promotion":**
+- The promotionId in your blog post doesn't exist in promotions.json
+- Check spelling and capitalization
+- Add the promotion to promotions.json or fix the typo
+
+**Validation warning "references disabled promotion":**
+- The promotion exists but has `enabled: false`
+- Either enable the promotion or remove promotionId from the post
+
+**"PROMOTION" banner not showing on listing page:**
+- Check `showBannerOnListing: true` in the promotion configuration
+- Verify promotion is enabled
 
 ---
 
@@ -898,7 +1070,7 @@ A: Yes! Use HTML5 video/audio tags in the `content` field:
 A: Just use different values in the `author` field for each post. To display author bios, you'd need to enhance the system with an authors configuration file.
 
 **Q: Can I have different promotion codes for different posts?**
-A: Not currently. The system has one active promotion. To support multiple promotions would require enhancing `promotions.json` and the loading logic.
+A: Yes! The multi-promotion system supports unlimited promotions. Create promotions in `promotions.json` and assign them to posts using the `promotionId` field. See the [Promotion Management](#promotion-management) section for details.
 
 ---
 
@@ -923,7 +1095,26 @@ A: Not currently. The system has one active promotion. To support multiple promo
 
 ## Changelog
 
-### Version 2.0.0 (Current)
+### Version 3.0.0 (Current)
+- 🎉 **NEW**: Multi-promotion system architecture
+- ✨ Support unlimited simultaneous promotions in `promotions.json`
+- ✨ Posts reference promotions via `promotionId` field
+- ✨ Promotions display in 3 locations: banner, sidebar, end-of-post
+- 🔧 Refactored data-loader.js with promotion-specific functions
+- ✅ Enhanced validation for multi-promotion structure
+- 📚 Comprehensive promotion management documentation
+- 🚀 Scalable, bulletproof promotion system
+- ⚡ Easy to add/edit/delete promotions without code changes
+
+### Version 2.1.0
+- 🔄 **BREAKING CHANGE**: Migrated promotions to hardcoded content in blog posts
+- ⚠️ Deprecated centralized promotions.json system
+- ✨ Each blog post can now have unique, customized promotions
+- 📚 Updated documentation to reflect new promotion approach
+- 🐛 Removed unused promotion rendering functions
+- 💡 Added promotion styling examples and templates
+
+### Version 2.0.0
 - ✨ Migrated from JavaScript to JSON for content
 - ✨ Added centralized promotion configuration
 - ✨ Created validation script
@@ -941,4 +1132,4 @@ A: Not currently. The system has one active promotion. To support multiple promo
 
 **Last Updated:** October 2025
 **Maintainer:** Harmony Apartments Team
-**Version:** 2.0.0
+**Version:** 3.0.0

@@ -1,32 +1,64 @@
 {
-  "currentPromotion": {
-    "enabled": true,
-    "code": "WELCOMEBACK",
-    "discount": "15% OFF",
-    "title": "Limited Time Offer:",
-    "returnGuestTitle": "Returning Guest Exclusive:",
-    "validUntil": "2025-12-15",
-    "validUntilFormatted": "12/15/25",
-    "blackoutDates": [
-      {
-        "date": "2025-11-27",
-        "name": "Thanksgiving",
-        "formatted": "11/27/25"
-      },
-      {
-        "date": "2025-12-25",
-        "name": "Christmas",
-        "formatted": "12/25/25"
-      },
-      {
-        "date": "2025-12-31",
-        "name": "New Year's Eve",
-        "formatted": "12/31/25"
-      }
-    ],
-    "applicablePosts": [1],
-    "showBannerOnListing": true,
-    "bookingUrl": "https://reserve.hobokenvacationrentals.com/",
-    "restrictions": "Returning guests only. Cannot combine with other offers. Subject to availability. Taxes and fees apply."
+  "_comment": "Multi-Promotion System - Each promotion is identified by a unique key (promotion code). Posts reference promotions via the 'promotionId' field in blog-posts.json.",
+  "_usage": "To add a new promotion: 1) Add it to this file with a unique key, 2) Set enabled: true, 3) Reference it in blog posts using the key as promotionId",
+  "promotions": {
+    "WELCOMEBACK": {
+      "enabled": true,
+      "code": "WELCOMEBACK",
+      "discount": "15% OFF",
+      "title": "Limited Time Offer:",
+      "returnGuestTitle": "Returning Guest Exclusive:",
+      "validUntil": "2025-12-15",
+      "validUntilFormatted": "12/15/25",
+      "blackoutDates": [
+        {
+          "date": "2025-11-27",
+          "name": "Thanksgiving",
+          "formatted": "11/27/25"
+        },
+        {
+          "date": "2025-12-25",
+          "name": "Christmas",
+          "formatted": "12/25/25"
+        },
+        {
+          "date": "2025-12-31",
+          "name": "New Year's Eve",
+          "formatted": "12/31/25"
+        }
+      ],
+      "showBannerOnListing": true,
+      "bookingUrl": "https://reserve.hobokenvacationrentals.com/",
+      "restrictions": "Returning guests only. Cannot combine with other offers. Subject to availability. Taxes and fees apply."
+    },
+    "FALL15": {
+      "enabled": true,
+      "code": "FALL15",
+      "discount": "15% OFF",
+      "title": "Limited Time Offer:",
+      "returnGuestTitle": "Inquirer Exclusive:",
+      "validUntil": "2025-12-15",
+      "validUntilFormatted": "12/15/25",
+      "blackoutDates": [
+        {
+          "date": "2025-11-27",
+          "name": "Thanksgiving",
+          "formatted": "11/27/25"
+        },
+        {
+          "date": "2025-12-25",
+          "name": "Christmas",
+          "formatted": "12/25/25"
+        },
+        {
+          "date": "2025-12-31",
+          "name": "New Year's Eve",
+          "formatted": "12/31/25"
+        }
+      ],
+      "showBannerOnListing": true,
+      "bookingUrl": "https://reserve.hobokenvacationrentals.com/",
+      "restrictions": "New bookings only. Cannot combine with other offers. Subject to availability. Taxes and fees apply."
+    }
   }
 }

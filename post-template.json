@@ -8,7 +8,7 @@
 
   "excerpt": "REQUIRED - String - A brief summary of the post (2-3 sentences). Shows on listing page. Keep under 200 characters. Example: 'Discover the best spring activities in Hoboken, from waterfront walks to local dining. Perfect for your NYC getaway.'",
 
-  "content": "REQUIRED - String (HTML) - The main content of the blog post. Write in HTML format. Use <h2> for major sections, <h3> for subsections, <p> for paragraphs. Example structure:\n\n<h3>Introduction Title</h3>\n<p>Introduction paragraph text here...</p>\n\n<h2>Main Section Title</h2>\n\n<h3>Subsection 1</h3>\n<p>Content for subsection 1...</p>\n\n<h3>Subsection 2</h3>\n<p>Content for subsection 2...</p>\n\n<h2>Conclusion</h2>\n<p>Concluding paragraph...</p>\n\nTips:\n- Use <strong>text</strong> for bold\n- Use <em>text</em> for italics\n- Use <a href='URL'>link text</a> for links\n- Keep paragraphs concise (3-5 sentences)\n- Break content into scannable sections with headings",
+  "content": "REQUIRED - String (HTML) - The main content of the blog post. Write in HTML format. Use <h2> for major sections, <h3> for subsections, <p> for paragraphs. Example structure:\n\n<h3>Introduction Title</h3>\n<p>Introduction paragraph text here...</p>\n\n<h2>Main Section Title</h2>\n\n<h3>Subsection 1</h3>\n<p>Content for subsection 1...</p>\n\n<h3>Subsection 2</h3>\n<p>Content for subsection 2...</p>\n\n<h2>Conclusion</h2>\n<p>Concluding paragraph...</p>\n\nTips:\n- Use <strong>text</strong> for bold\n- Use <em>text</em> for italics\n- Use <a href='URL'>link text</a> for links\n- Keep paragraphs concise (3-5 sentences)\n- Break content into scannable sections with headings\n\nNote: Do NOT hardcode promotions in content. Use the 'promotionId' field instead to reference promotions from promotions.json.",
 
   "author": "OPTIONAL - String - Default: 'Harmony Apartments' - Change if you have multiple authors. Example: 'John Smith' or 'Guest Writer'",
 
@@ -16,5 +16,7 @@
 
   "category": "REQUIRED - String - Blog post category. Keep consistent. Current categories: 'Travel & Local', 'Events', 'Guides', 'Seasonal'. Choose existing or create new category. Example: 'Travel & Local'",
 
-  "image": "OPTIONAL - String - Path to blog post featured image. Format: 'public/filename.jpg' - Upload image to /public folder first, then reference here. Use descriptive filenames. Example: 'public/spring-hoboken-2025.jpg'. Recommended image size: 1200x600px minimum, JPG format, optimized under 500KB."
+  "image": "OPTIONAL - String - Path to blog post featured image. Format: 'public/filename.jpg' - Upload image to /public folder first, then reference here. Use descriptive filenames. Example: 'public/spring-hoboken-2025.jpg'. Recommended image size: 1200x600px minimum, JPG format, optimized under 500KB.",
+
+  "promotionId": "OPTIONAL - String - Reference to a promotion in promotions.json. The promotion will display in 3 locations: 1) Banner on listing page (if showBannerOnListing: true), 2) Sidebar on post page, 3) End of post content. Example: 'FALL15' or 'WELCOMEBACK'. To use:\n1. Create/verify promotion exists in promotions.json\n2. Copy the promotion key (e.g., 'FALL15')\n3. Add to this field: 'promotionId': 'FALL15'\n4. Run validation to ensure reference is valid\n\nTo have NO promotion on this post, simply omit this field entirely. Validation will check that referenced promotionId exists and is enabled. See README.md Promotion Management section for complete details."
 }

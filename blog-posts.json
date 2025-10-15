@@ -1,6 +1,17 @@
 {
   "posts": [
     {
+      "id": 2,
+      "title": "First Time in NYC? 5 Smart Tips for a Stress-Free Stay Near Manhattan",
+      "excerpt": "New to New York City? Stay minutes from Manhattan at Harmony Apartments Hoboken and follow these 5 tips for an easy, family-friendly first visit.",
+      "content": "\n            <h3>Start Smart, Stay Close</h3>\n            <p>Your first NYC trip should be exciting, not exhausting. Staying at Harmony Apartments Hoboken places you across the river from Midtown and Downtown with quick PATH and ferry access, extra space, full kitchens, and calm nights.</p>\n\n            <h2>5 Smart Tips for First-Time Visitors</h2>\n\n            <h3>1. Base in Hoboken, not Midtown</h3>\n            <p>More space, better value, quieter nights, 10–15 minutes from Manhattan.</p>\n\n            <h3>2. Use PATH and ferry like a local</h3>\n            <p>PATH to 33rd St or WTC fast; ferry to Hudson Yards, Midtown, and Battery Park.</p>\n\n            <h3>3. Plan by neighborhood</h3>\n            <p>Group sights by area to cut transit time and fatigue.</p>\n\n            <h3>4. Build recovery into the day</h3>\n            <p>Waterfront walks or a recharge break back at your apartment.</p>\n\n            <h3>5. Dine smart near home base</h3>\n            <p>Hoboken bakeries, pizza, and waterfront restaurants for low-stress family meals.</p>\n\n            <h2>Why Harmony Works for New Visitors</h2>\n            <p>Apartments with living rooms, full kitchens, and laundry. Family-friendly layouts. Skyline views. Minutes to transit. Easy check-in and responsive support.</p>\n\n            <p>Ready to plan your first NYC adventure? <a href='https://reserve.hobokenvacationrentals.com/'>Book your stay at Harmony Apartments</a> and experience the city the smart way.</p>\n        ",
+      "author": "Harmony Apartments",
+      "date": "2025-10-13",
+      "category": "Travel & Local",
+      "image": "public/first-time-nyc-hoboken-sunset-ferry.jpg",
+      "promotionId": "FALL15"
+    },
+    {
       "id": 1,
       "title": "5 Reasons to Visit NYC in the Fall",
       "excerpt": "Experience NYC's fall colors, culture, and markets while staying minutes away at Harmony Apartments Hoboken — your calm, family-friendly base near Manhattan.",
@@ -8,7 +19,8 @@
       "author": "Harmony Apartments",
       "date": "2025-10-11",
       "category": "Travel & Local",
-      "image": "public/blog1.jpg"
+      "image": "public/nyc-in-the-fall-2025.jpg",
+      "promotionId": "WELCOMEBACK"
     }
   ]
 }

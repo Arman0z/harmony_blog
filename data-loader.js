@@ -1,10 +1,11 @@
 // Data Loader Utility
 // Centralized data loading for blog posts and promotions
 // This file provides functions to load JSON data with error handling
+// Multi-Promotion System: Posts reference promotions via the 'promotionId' field
 
 // Global variables to store loaded data
 let blogPosts = [];
-let promotionConfig = null;
+let promotionsData = {};
 let dataLoadError = null;
 
 /**
@@ -27,8 +28,9 @@ async function loadBlogPosts() {
 }
 
 /**
- * Loads promotion configuration from promotions.json
- * @returns {Promise<Object>} Promotion configuration object
+ * Loads all promotions from promotions.json
+ * Multi-Promotion System: Loads all available promotions
+ * @returns {Promise<Object>} Object containing all promotions keyed by promotion ID
  */
 async function loadPromotions() {
     try {
@@ -37,8 +39,8 @@ async function loadPromotions() {
             throw new Error(`Failed to load promotions: ${response.status} ${response.statusText}`);
         }
         const data = await response.json();
-        promotionConfig = data.currentPromotion || null;
-        return promotionConfig;
+        promotionsData = data.promotions || {};
+        return promotionsData;
     } catch (error) {
         console.error('Error loading promotions:', error);
         throw error;
@@ -88,73 +90,103 @@ function displayLoadingError(error) {
 }
 
 /**
+ * Gets the promotion object for a given post
+ * @param {Object} post - The blog post object
+ * @returns {Object|null} The promotion object or null if none found
+ */
+function getPromotionForPost(post) {
+    // Check if post has a promotionId
+    if (!post.promotionId) {
+        return null;
+    }
+
+    // Get the promotion from promotionsData
+    const promotion = promotionsData[post.promotionId];
+
+    // Check if promotion exists and is enabled
+    if (!promotion || !promotion.enabled) {
+        return null;
+    }
+
+    return promotion;
+}
+
+/**
  * Checks if a post should display a promotion banner
- * @param {number} postId - The ID of the post to check
+ * @param {Object} post - The blog post object
  * @returns {boolean} True if post should show promotion
  */
-function shouldShowPromotion(postId) {
-    if (!promotionConfig || !promotionConfig.enabled) {
+function shouldShowPromotion(post) {
+    const promotion = getPromotionForPost(post);
+    if (!promotion) {
         return false;
     }
-    if (!promotionConfig.applicablePosts || !Array.isArray(promotionConfig.applicablePosts)) {
-        return false;
-    }
-    return promotionConfig.applicablePosts.includes(postId);
+
+    // Check if promotion has showBannerOnListing enabled
+    return promotion.showBannerOnListing === true;
 }
 
 /**
  * Generates HTML for the sidebar promotion box
+ * @param {string} promotionId - The ID of the promotion to display
  * @returns {string} HTML string for sidebar promotion
  */
-function generateSidebarPromotion() {
-    if (!promotionConfig || !promotionConfig.enabled) {
+function generateSidebarPromotion(promotionId) {
+    // Get promotion by ID
+    const promotion = promotionsData[promotionId];
+
+    if (!promotion || !promotion.enabled) {
         return '';
     }
 
-    const blackoutList = promotionConfig.blackoutDates
+    const blackoutList = promotion.blackoutDates
         .map(date => `<li>${date.name} (${date.formatted})</li>`)
         .join('');
 
     return `
         <div class="sidebar-section promotion-box">
-            <h3 class="promotion-box-title">${promotionConfig.title}</h3>
-            <div class="promotion-box-discount">${promotionConfig.discount}</div>
-            <div class="promotion-box-code">Code: <strong>${promotionConfig.code}</strong></div>
+            <h3 class="promotion-box-title">${promotion.title}</h3>
+            <div class="promotion-box-discount">${promotion.discount}</div>
+            <div class="promotion-box-code">Code: <strong>${promotion.code}</strong></div>
             <div class="promotion-box-validity">
-                <p>Promotion applies to arrivals before ${promotionConfig.validUntilFormatted}. Available for a limited time. Excludes:</p>
+                <p>Promotion applies to arrivals before ${promotion.validUntilFormatted}. Available for a limited time. Excludes:</p>
                 <ul>
                     ${blackoutList}
                 </ul>
             </div>
-            <a href="${promotionConfig.bookingUrl}" class="promotion-box-button" target="_blank">Book with ${promotionConfig.code}</a>
-            <p class="promotion-box-terms">${promotionConfig.restrictions}</p>
+            <a href="${promotion.bookingUrl}" class="promotion-box-button" target="_blank">Book with ${promotion.code}</a>
+            <p class="promotion-box-terms">${promotion.restrictions}</p>
         </div>
     `;
 }
 
 /**
  * Generates HTML for the end-of-post promotion box
+ * @param {string} promotionId - The ID of the promotion to display
  * @returns {string} HTML string for end-of-post promotion
  */
-function generateEndOfPostPromotion() {
-    if (!promotionConfig || !promotionConfig.enabled) {
+function generateEndOfPostPromotion(promotionId) {
+    // Get promotion by ID
+    const promotion = promotionsData[promotionId];
+
+    if (!promotion || !promotion.enabled) {
         return '';
     }
 
-    const blackoutList = promotionConfig.blackoutDates
+    const blackoutList = promotion.blackoutDates
         .map(date => `${date.name} (${date.formatted})`)
         .join(', ');
 
     return `
         <div class="post-end-promotion">
-            <h3 class="post-end-promotion-title">${promotionConfig.returnGuestTitle}</h3>
-            <div class="post-end-promotion-discount">${promotionConfig.discount} YOUR STAY</div>
-            <div class="post-end-promotion-code">Code: <strong>${promotionConfig.code}</strong></div>
+            <h3 class="post-end-promotion-title">${promotion.returnGuestTitle}</h3>
+            <div class="post-end-promotion-discount">${promotion.discount} YOUR STAY</div>
+            <div class="post-end-promotion-code">Code: <strong>${promotion.code}</strong></div>
             <div class="post-end-promotion-validity">
-                <p>Promotion applies to arrivals before ${promotionConfig.validUntilFormatted}. Available for a limited time.<br>Excludes: ${blackoutList}.</p>
+                <p>Promotion applies to arrivals before ${promotion.validUntilFormatted}. Available for a limited time.<br>Excludes: ${blackoutList}.</p>
             </div>
-            <a href="${promotionConfig.bookingUrl}" class="post-end-promotion-button" target="_blank">Book with ${promotionConfig.code}</a>
-            <p class="post-end-promotion-terms">${promotionConfig.restrictions}</p>
+            <a href="${promotion.bookingUrl}" class="post-end-promotion-button" target="_blank">Book with ${promotion.code}</a>
+            <p class="post-end-promotion-terms">${promotion.restrictions}</p>
         </div>
     `;
 }
