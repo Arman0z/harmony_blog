@@ -192,6 +192,28 @@ function generateEndOfPostPromotion(promotionId) {
 }
 
 /**
+ * Generates HTML for the mobile promotion banner (shown above content on mobile)
+ * @param {string} promotionId - The ID of the promotion to display
+ * @returns {string} HTML string for mobile promotion banner
+ */
+function generateMobilePromotionBanner(promotionId) {
+    // Get promotion by ID
+    const promotion = promotionsData[promotionId];
+
+    if (!promotion || !promotion.enabled) {
+        return '';
+    }
+
+    return `
+        <div class="mobile-promotion-banner">
+            <div class="mobile-promotion-title">${promotion.title}</div>
+            <div class="mobile-promotion-discount">${promotion.discount}</div>
+            <a href="${promotion.bookingUrl}" class="mobile-promotion-button" target="_blank">Code: ${promotion.code}</a>
+        </div>
+    `;
+}
+
+/**
  * Get all unique categories from blog posts
  * @returns {Array<string>} Sorted array of unique categories
  */

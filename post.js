@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         loadPost();
         loadRelatedArticles();
         loadSidebarPromotion();
+        loadMobilePromotionBanner();
         initializeScrollNav();
     } catch (error) {
         // Error already handled by data-loader.js
@@ -166,4 +167,18 @@ function loadSidebarPromotion() {
         ? generateSidebarPromotion(currentPost.promotionId)
         : '';
     promotionContainer.innerHTML = promotionHTML;
+}
+
+function loadMobilePromotionBanner() {
+    const mobilePromotionContainer = document.getElementById('mobilePromotionBanner');
+
+    if (!mobilePromotionContainer) {
+        return;
+    }
+
+    // Generate and insert mobile promotion banner using current post's promotionId
+    const mobilePromotionHTML = currentPost && currentPost.promotionId
+        ? generateMobilePromotionBanner(currentPost.promotionId)
+        : '';
+    mobilePromotionContainer.innerHTML = mobilePromotionHTML;
 }

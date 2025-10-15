@@ -940,6 +940,54 @@ body {
     font-style: italic;
 }
 
+/* Mobile Promotion Banner (shown only on mobile) */
+.mobile-promotion-container {
+    display: none; /* Hidden by default on desktop */
+}
+
+.mobile-promotion-banner {
+    background: #5B99CF;
+    color: white;
+    text-align: center;
+    padding: 1.5rem 1.25rem;
+    margin: 1.5rem 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.mobile-promotion-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    opacity: 0.95;
+}
+
+.mobile-promotion-discount {
+    font-size: 1.5rem;
+    font-weight: 900;
+    letter-spacing: 1px;
+    margin-bottom: 0.75rem;
+}
+
+.mobile-promotion-button {
+    display: inline-block;
+    padding: 0.75rem 2rem;
+    background-color: white;
+    color: #5B99CF;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.mobile-promotion-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+    background-color: #f8f9fa;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .scroll-nav-logo {
@@ -1047,6 +1095,16 @@ body {
 
     .sidebar-section {
         padding: 1rem;
+    }
+
+    /* Show mobile promotion banner on mobile */
+    .mobile-promotion-container {
+        display: block;
+    }
+
+    /* Hide sidebar promotion box on mobile (it's replaced by mobile banner) */
+    .promotion-box {
+        display: none;
     }
 }
 
