@@ -1,6 +1,28 @@
 {
   "posts": [
     {
+      "id": 4,
+      "title": "5 Smart Tips for Your First Trip to New York",
+      "excerpt": "Make your first New York visit easy. Stay minutes from Manhattan at Harmony Apartments Hoboken and follow these 5 tips to save time and stress.",
+      "content": "\n            <h3>Start Smart, Stay Close</h3>\n            <p>First visits run smoother when your home base is calm, roomy, and near transit. Harmony Apartments Hoboken gives you apartment space, kitchens, and quick PATH or ferry access to Midtown and Downtown.</p>\n\n            <h2>5 Smart Tips for First-Time Visitors</h2>\n\n            <h3>1. Base in Hoboken, not Midtown</h3>\n            <p>More space and value. Quieter nights. 10–15 minutes to Manhattan.</p>\n\n            <h3>2. Use PATH and ferry like a local</h3>\n            <p>PATH to 33rd St or WTC fast; ferries to Hudson Yards, Midtown, and Battery Park are scenic and simple.</p>\n\n            <h3>3. Plan by neighborhood</h3>\n            <p>Do Midtown in one day, Downtown in another. Less transit, more time on foot.</p>\n\n            <h3>4. Schedule recovery time</h3>\n            <p>Add a waterfront walk or apartment recharge to avoid burnout before dinner or a show.</p>\n\n            <h3>5. Eat near home base</h3>\n            <p>Hoboken bakeries, pizza, and waterfront dining keep evenings easy for families.</p>\n\n            <h2>Why Harmony Works</h2>\n            <p>Apartments with living rooms, kitchens, and laundry. Family-friendly layouts. Skyline views. Smooth check-in. Minutes from transit.</p>\n\n            <p>Ready to plan your first NYC adventure? <a href='https://reserve.hobokenvacationrentals.com/'>Book your stay at Harmony Apartments</a> and experience the city the smart way.</p>\n        ",
+      "author": "Harmony Apartments",
+      "date": "2025-10-23",
+      "category": "Guides",
+      "image": "public/first-time-nyc-hoboken-sunset-ferry2.jpg",
+      "promotionId": "FALL15"
+    },
+    {
+      "id": 3,
+      "title": "NYC Marathon Weekend: 5 Ways to Stay Close and Stress Less",
+      "excerpt": "Make the most of NYC Marathon weekend with quick route access and room to recover at Harmony Apartments Hoboken. Here are 5 ways to do it right.",
+      "content": "\n            <h3>Why Hoboken Works for Marathon Weekend</h3>\n            <p>The marathon's energy is unmatched. Staying at Harmony Apartments Hoboken keeps you close to the route and finish areas while giving you quiet space to rest, refuel, and reset.</p>\n\n            <h2>5 Ways to Stay Close and Stress Less</h2>\n\n            <h3>1. Base nearby, not street-side</h3>\n            <p>Skip the chaos. Enjoy quick access to viewing points while returning to a calm apartment when you need a break.</p>\n\n            <h3>2. Use fast, simple transit</h3>\n            <p>PATH puts you into Midtown quickly; ferries to Midtown offer a scenic alternative. From there, reach First Avenue or Central Park viewing zones by subway or on foot.</p>\n\n            <h3>3. Recover like a pro</h3>\n            <p>Stretch out in a full living room, cook a recovery meal in your kitchen, and do a quick laundry cycle before dinner.</p>\n\n            <h3>4. Spectator strategy</h3>\n            <p>Arrive early to popular spots on First Avenue or near the Central Park finish. Plan a meeting point away from the densest crowds.</p>\n\n            <h3>5. Make a weekend of it</h3>\n            <p>Add waterfront brunch in Hoboken, sunset skyline walks, and a Monday museum visit after the race crowds thin.</p>\n\n            <h2>Your Best Home Base</h2>\n            <p>Spacious, family-friendly apartments with kitchens and living areas. Skyline views. Minutes to PATH and ferry. Smooth check-in.</p>\n\n            <p>Experience NYC Marathon weekend the smart way. <a href='https://reserve.hobokenvacationrentals.com/'>Book your stay at Harmony Apartments</a> today.</p>\n        ",
+      "author": "Harmony Apartments",
+      "date": "2025-10-24",
+      "category": "Events",
+      "image": "public/nyc-marathon-runners-central-park.jpg",
+      "promotionId": "WELCOMEBACK"
+    },
+    {
       "id": 2,
       "title": "First Time in NYC? 5 Smart Tips for a Stress-Free Stay Near Manhattan",
       "excerpt": "New to New York City? Stay minutes from Manhattan at Harmony Apartments Hoboken and follow these 5 tips for an easy, family-friendly first visit.",
@@ -9,7 +31,7 @@
       "date": "2025-10-13",
       "category": "Travel & Local",
       "image": "public/first-time-nyc-hoboken-sunset-ferry.jpg",
-      "promotionId": "FALL15"
+      "promotionId": "FALL15_NOBANNER"
     },
     {
       "id": 1,
@@ -20,7 +42,7 @@
       "date": "2025-10-11",
       "category": "Travel & Local",
       "image": "public/nyc-in-the-fall-2025.jpg",
-      "promotionId": "WELCOMEBACK"
+      "promotionId": "WELCOMEBACK_NOBANNER"
     }
   ]
 }
